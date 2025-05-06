@@ -1,2 +1,128 @@
 # Quiz-biblico-2025
 Quiz Bíblico para nosso discipulado do dia 10.05
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Bíblico</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; text-align: center; }
+    .quiz-container { background: white; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 15px; }
+    .options { list-style: none; padding: 0; }
+    .options li { margin: 10px 0; }
+    button { padding: 10px 20px; font-size: 1em; cursor: pointer; }
+    .result { margin-top: 20px; font-weight: bold; font-size: 1.1em; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz Bíblico</h1>
+    <div>
+      <label for="level">Escolha o nível:</label>
+      <select id="level" onchange="selectLevel()">
+        <option value="facil">Fácil</option>
+        <option value="medio">Intermediário</option>
+        <option value="dificil">Difícil</option>
+      </select>
+    </div>
+    <div class="question" id="question"></div>
+    <ul class="options" id="options"></ul>
+    <button onclick="nextQuestion()">Próxima</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const quizzes = {
+      facil: [
+        {
+          question: "Quem construiu a arca para escapar do dilúvio?",
+          options: ["Moisés", "Elias", "Noé", "Abraão"],
+          answer: 2
+        },
+        {
+          question: "Qual era o nome dos pais de Jesus?",
+          options: ["Ana e Joaquim", "Maria e José", "Marta e Lázaro", "Isabel e Zacarias"],
+          answer: 1
+        }
+      ],
+      medio: [
+        {
+          question: "Qual profeta desafiou os profetas de Baal no Monte Carmelo?",
+          options: ["Isaías", "Jeremias", "Elias", "Eliseu"],
+          answer: 2
+        },
+        {
+          question: "Qual apóstolo escreveu a maioria das cartas do Novo Testamento?",
+          options: ["Pedro", "Tiago", "João", "Paulo"],
+          answer: 3
+        }
+      ],
+      dificil: [
+        {
+          question: "O que significa a expressão 'Filho do Homem'?",
+          options: ["Apenas sua natureza humana", "Um título profético com ligação messiânica", "Um costume judaico antigo", "Um erro de tradução"],
+          answer: 1
+        },
+        {
+          question: "O cordeiro pascal simboliza o quê?",
+          options: ["A força de Israel", "A lei de Moisés", "A libertação do Egito e aponta para Cristo", "O templo"],
+          answer: 2
+        }
+      ]
+    };
+
+    let current = 0;
+    let score = 0;
+    let quiz = quizzes['facil'];
+
+    function selectLevel() {
+      const level = document.getElementById('level').value;
+      quiz = quizzes[level];
+      current = 0;
+      score = 0;
+      document.getElementById('result').innerText = '';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quiz[current];
+      document.getElementById('question').innerText = q.question;
+      const options = document.getElementById('options');
+      options.innerHTML = '';
+
+      q.options.forEach((option, i) => {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(i);
+        li.appendChild(btn);
+        options.appendChild(li);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const result = document.getElementById('result');
+      if (selected === quiz[current].answer) {
+        score++;
+        result.innerText = "Correto!";
+      } else {
+        result.innerText = "Errado!";
+      }
+    }
+
+    function nextQuestion() {
+      document.getElementById('result').innerText = '';
+      current++;
+      if (current < quiz.length) {
+        showQuestion();
+      } else {
+        document.querySelector('.quiz-container').innerHTML =
+          `<h2>Fim do Quiz!</h2><p>Você acertou ${score} de ${quiz.length} perguntas.</p><button onclick="location.reload()">Jogar Novamente</button>`;
+      }
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
